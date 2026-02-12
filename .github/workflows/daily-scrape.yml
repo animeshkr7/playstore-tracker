@@ -29,4 +29,4 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           export PYTHONPATH=$PYTHONPATH:.
-          python -m backend.app
+          python -c "from backend.app import full_scrape; full_scrape()"
