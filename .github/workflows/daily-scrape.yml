@@ -29,4 +29,5 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           cd backend
+          export PYTHONPATH=$PYTHONPATH:.
           python -c "from scraper import full_scrape; full_scrape()"
