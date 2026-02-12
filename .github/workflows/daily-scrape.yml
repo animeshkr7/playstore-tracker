@@ -28,6 +28,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          cd backend
+          # cd backend
           export PYTHONPATH=$PYTHONPATH:.
-          python -c "from scraper import full_scrape; full_scrape()"
+          # python -c "from scraper import full_scrape; full_scrape()"
+          python -c "from backend.app import full_scrape; full_scrape()"
