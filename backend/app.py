@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from .database import get_apps_by_month, get_all_months, get_stats
+from database import get_apps_by_month, get_all_months, get_stats
 from scraper import (
     scrape_by_search, scrape_new_apps, scrape_all_new_apps,
     scrape_all_categories, scrape_by_queries, full_scrape,
