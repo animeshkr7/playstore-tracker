@@ -1,6 +1,6 @@
-const API_URL = 'http://localhost:8000';
+// const API_URL = 'http://localhost:8000';
 // To (placeholder - will update after Render deploy):
-// const API_URL = 'https://playstore-tracker-api.onrender.com';
+const API_URL = 'https://playstore-tracker-api.onrender.com';
 
 const monthSelect = document.getElementById('month');
 const yearSelect = document.getElementById('year');
