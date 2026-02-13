@@ -72,9 +72,11 @@ async function scrapeApps() {
     try {
         const res = await fetch(`${API_URL}${endpoints[scrapeType]}`, { method: 'POST' });
         const data = await res.json();
-        alert(`Scraped ${data.scraped} apps!`);
-        fetchApps(yearSelect.value, monthSelect.value);
-        loadStats();
+        alert(`Scrape started! It will run in the background. Refresh in a minute to see results.`);
+        setTimeout(() => {
+            fetchApps(yearSelect.value, monthSelect.value);
+            loadStats();
+        }, 5000);
     } catch (err) {
         alert('Error scraping. Check if backend is running.');
     } finally {

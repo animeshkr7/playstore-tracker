@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from database import get_apps_by_month, get_all_months, get_stats
 from scraper import (
@@ -47,37 +47,37 @@ def list_countries():
     return {"countries": COUNTRIES}
 
 @app.post("/scrape/search")
-def trigger_search_scrape(query: str = Query(default="new apps 2025"), limit: int = 50):
+def trigger_search_scrape(background_tasks: BackgroundTasks, query: str = Query(default="new apps 2025"), limit: int = 50):
     """Scrape by search query."""
-    apps = scrape_by_search(query=query, limit=limit)
-    return {"scraped": len(apps), "query": query}
+    background_tasks.add_task(scrape_by_search, query=query, limit=limit)
+    return {"status": "started", "query": query}
 
 @app.post("/scrape/new")
-def trigger_new_scrape(country: str = "us", limit: int = 50):
+def trigger_new_scrape(background_tasks: BackgroundTasks, country: str = "us", limit: int = 50):
     """Scrape new apps from one country."""
-    apps = scrape_new_apps(country=country, limit=limit)
-    return {"scraped": len(apps), "country": country}
+    background_tasks.add_task(scrape_new_apps, country=country, limit=limit)
+    return {"status": "started", "country": country}
 
 @app.post("/scrape/new/all")
-def trigger_all_new_scrape():
+def trigger_all_new_scrape(background_tasks: BackgroundTasks):
     """Scrape new apps from multiple countries."""
-    apps = scrape_all_new_apps(countries=COUNTRIES[:5], limit_per=30)
-    return {"scraped": len(apps)}
+    background_tasks.add_task(scrape_all_new_apps, countries=COUNTRIES[:5], limit_per=30)
+    return {"status": "started"}
 
 @app.post("/scrape/categories")
-def trigger_category_scrape():
+def trigger_category_scrape(background_tasks: BackgroundTasks):
     """Scrape apps from all categories."""
-    apps = scrape_all_categories(limit_per_category=30)
-    return {"scraped": len(apps)}
+    background_tasks.add_task(scrape_all_categories, limit_per_category=30)
+    return {"status": "started"}
 
 @app.post("/scrape/queries")
-def trigger_query_scrape():
+def trigger_query_scrape(background_tasks: BackgroundTasks):
     """Scrape using predefined search queries."""
-    apps = scrape_by_queries(limit=30)
-    return {"scraped": len(apps)}
+    background_tasks.add_task(scrape_by_queries, limit=30)
+    return {"status": "started"}
 
 @app.post("/scrape/full")
-def trigger_full_scrape():
+def trigger_full_scrape(background_tasks: BackgroundTasks):
     """Run comprehensive scrape (takes several minutes)."""
-    apps = full_scrape()
-    return {"scraped": len(apps)}
+    background_tasks.add_task(full_scrape)
+    return {"status": "started", "message": "Full scrape running in background"}
