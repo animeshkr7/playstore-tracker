@@ -3,31 +3,34 @@ name: Daily Scrape
 on:
   schedule:
     # Runs at 12:00 UTC every day
-    # Cron format: minute hour day-of-month month day-of-week
     - cron: '0 12 * * *'
   workflow_dispatch:  # Allows manual trigger from GitHub UI
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 30
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      
+
       - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Verify scraper module exists
         run: |
-          pip install -r backend/requirements.txt
-      
+          cd backend
+          python -c "import scraper; print('scraper module loaded OK')"
+
       - name: Run full scrape
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           cd backend
-          export PYTHONPATH=$PYTHONPATH:.
-          python -c "from app import full_scrape; full_scrape()"
+          python -c "from scraper import full_scrape; full_scrape()"
