@@ -1,0 +1,20 @@
+# Virtual environments
+myenv/
+b_env/
+backend/b_env/
+backend/myenv/
+venv/
+.venv/
+
+# Environment variables (contains secrets!)
+.env
+backend/.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -7,6 +7,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+# Strip pgbouncer query param that psycopg2 doesn't understand
+if DATABASE_URL and "?pgbouncer=" in DATABASE_URL:
+    DATABASE_URL = DATABASE_URL.split("?pgbouncer=")[0]
 
 def get_connection():
     return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
